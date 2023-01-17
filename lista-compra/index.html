@@ -16,23 +16,28 @@
             <button id="reset">Limpar lista</button>
         </header>
         <main>
-            <form action="" id="adicionarProduto" class="formulario">
-                <div>
-                    <label for="item">Produto</label>
-                    <input type="text" id="produto">
+            <form action="" id="addProduct" class="form">
+                <div class="boxProducts">
+                    <div class="addProducts">
+                        <label for="item">Produto</label>
+                        <input type="text" id="product" class="textArea">
+                    </div>
+                    <div class="addProducts">
+                        <label for="item">Quantidade</label>
+                        <input type="number" id="quantity" class="textArea">
+                    </div>
                 </div>
+
                 <div>
-                    <label for="item">Quantidade</label>
-                    <input type="number" id="quantidade">
-                </div>
                 <input type="submit" value="Adicionar">
+                </div>
             </form>
 
-            <table id="listaCompras">
+            <table id="buyList">
                 <tr>
-                    <th class="produtos">Produto</th>
-                    <th>Kg/g/U</th>
                     <th></th>
+                    <th class="products">Produto</th>
+                    <th>Kg/g/U</th>
                     <th></th>
                 </tr>
             </table>

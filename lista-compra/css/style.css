@@ -46,25 +46,40 @@ h1{
 }
 
 main{
-    width: 50vw;
+    width: 90vw;
     text-align: center;
     background-color: rgb(240, 240, 240);
     border-radius: 20px;
     padding-bottom: 15px;
 }
 
-.formulario{
+.form{
     display: flex;
-    justify-content: space-evenly;
+    flex-direction: column;
     margin: 15px 0;
+}
+
+.form div{
+    padding: 10px;
+}
+
+.addProducts{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.textArea{
+    width: 80%;
+    margin-top: 10px;
 }
 
 table{
     width: 100%;
 }
 
-.produtos{
-    width: 75%;
+.products{
+    width: 50%;
 }
 
 th{
@@ -93,3 +108,34 @@ strong{
     background-color: #d1d1d1;
 }
 
+@media(min-width: 768px) {
+    main{
+        width: 60vw;
+    }
+
+    .boxProducts{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .addProducts{
+        width: 65%;
+    }
+
+    .textArea{
+        width: 100%;
+    }
+}
+
+@media(min-width: 1024px) {
+    main{
+        width: 50vw;
+    }
+}
+
+@media(min-width: 1280px) {
+    main{
+        width: 40vw;
+    }
+}

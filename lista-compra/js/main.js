@@ -1,124 +1,123 @@
-const form = document.getElementById("adicionarProduto");
-const lista = document.getElementById("listaCompras");
-const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-const reseta = document.getElementById("reset");
+const form = document.getElementById("addProduct");
+const list = document.getElementById("buyList");
+const products = JSON.parse(localStorage.getItem("products")) || [];
+const reset = document.getElementById("reset");
 
 function getProducts() {
-    return JSON.parse(localStorage.getItem("produtos")) || [];
+    return products;
 }
 
-function setProducts(produtos) {
-    localStorage.setItem("produtos", JSON.stringify(produtos));
+function setProducts(products) {
+    localStorage.setItem("products", JSON.stringify(products));
 }
 
-reseta.addEventListener('click', () => {
+reset.addEventListener('click', () => {
+    if (confirm("Tem certeza que deseja resetar essa lista?")){
     localStorage.clear();
     window.location.reload();
+    }
 })
 
-produtos.forEach( (elemento) => {
-    criaElemento(elemento);
+
+products.forEach( (element) => {
+    createNewElement(element);
 });
 
-form.addEventListener("submit", (evento) => {
-    evento.preventDefault()
+form.addEventListener("submit", (event) => {
+    event.preventDefault()
     
-    let produto = evento.target.elements['produto'];
-    let quantidade = evento.target.elements['quantidade'];
+    let product = event.target.elements['product'];
+    let quantity = event.target.elements['quantity'];
     
-    let existe = produtos.find(elemento => elemento.produto === produto.value);
+    let exist = products.find(element => element.product === product.value);
     
-    let produtoAtual = {
-        "produto": produto.value,
-        "quantidade": quantidade.value
+    let currentProduct = {
+        "product": product.value,
+        "quantity": quantity.value
     }
 
-    if (existe) {
-        produtoAtual.id = existe.id;
+    if (exist) {
+        currentProduct.id = exist.id;
 
-        atualizaElemento(produtoAtual);
+        reloadElement(currentProduct);
 
-        produtos[produtos.findIndex(elemento => elemento.id === existe.id)] = produtoAtual;
+        products[products.findIndex(element => element.id === exist.id)] = currentProduct;
     } else {
-        produtoAtual.id = produtos[produtos.length -1] ? (produtos[produtos.length-1]).id + 1 : 0;
-        criaElemento(produtoAtual);
-        produtos.push(produtoAtual);
+        currentProduct.id = products[products.length -1] ? (products[products.length-1]).id + 1 : 0;
+        createNewElement(currentProduct);
+        products.push(currentProduct);
     }
 
-    localStorage.setItem("produtos", JSON.stringify(produtos));
+    setProducts(products);
     
-    produto.value = "";
-    quantidade.value = "";
+    product.value = "";
+    quantity.value = "";
 })
 
-function criaElemento(item) {
-    let numeroProduto = document.createElement('tr');
-    numeroProduto.classList.add("item");
+function createNewElement(item) {
+    let productTr = document.createElement('tr');
+    productTr.classList.add("item");
     if (item.checked){
-        numeroProduto.classList.add("check");
+        productTr.classList.add("check");
 
     }
 
-    let novoProduto = document.createElement('td');
+    let nameProduct = document.createElement('td');
     
-    novoProduto.innerHTML = item.produto;
-    novoProduto.dataset.id = item.id;
+    nameProduct.innerHTML = item.product;
+    nameProduct.dataset.id = item.id;
 
-    let quantidadeProduto = document.createElement('td');
+    let quantityProduct = document.createElement('td');
     
-    quantidadeProduto.innerHTML = item.quantidade;
-    quantidadeProduto.dataset.id = item.id + '-quantidade';
+    quantityProduct.innerHTML = item.quantity;
+    quantityProduct.dataset.id = item.id + '-quantity';
 
-    numeroProduto.appendChild(novoProduto);
-
-    numeroProduto.appendChild(quantidadeProduto);
-
-    numeroProduto.appendChild(checkBox(item));
-
-    numeroProduto.appendChild(botaoDeleta(item.id));
+    productTr.appendChild(checkBox(item));
+    productTr.appendChild(nameProduct);
+    productTr.appendChild(quantityProduct);
+    productTr.appendChild(deletButton(item.id));
     
-    lista.appendChild(numeroProduto);
+    list.appendChild(productTr);
 }
 
-//*função para atualizar elementos caso eles existão
-function atualizaElemento(item) {
-    document.querySelector('[data-id="' + item.id + '-quantidade"]').innerHTML = item.quantidade;
+function reloadElement(item) {
+    document.querySelector('[data-id="' + item.id + '-quantity"]').innerHTML = item.quantity;
 }
 
-function botaoDeleta(id) {
+function deletButton(id) {
     const creatTd = document.createElement("td");
-    const elementoBotao = document.createElement("button");
-    elementoBotao.innerText = "X"
+    const elementButton = document.createElement("button");
+    elementButton.innerText = "X"
 
-    elementoBotao.addEventListener("click", function(){
-        deletaElemento(this.parentNode, id)
+    elementButton.addEventListener("click", function(){
+        elementDelet(this.parentNode, id)
     })
 
-    creatTd.appendChild(elementoBotao);
+    creatTd.appendChild(elementButton);
 
     return creatTd
 }
 
-function deletaElemento(tag, id) {
+function elementDelet(tag, id) {
     tag.parentNode.remove()
 
-    produtos.splice(produtos.findIndex(elemento => elemento.id === id), 1);
-    localStorage.setItem("produtos", JSON.stringify(produtos));
+    products.splice(products.findIndex(element => element.id === id), 1);
+    setProducts(products);
 }
 
 function checkBox(item) {
     const creatTd = document.createElement("td");
-    const elementoCheckBox = document.createElement("input");
+    const elementCheckBox = document.createElement("input");
     if (item.checked){
-        elementoCheckBox.checked = true;
+        elementCheckBox.checked = true;
     }
-    elementoCheckBox.type = "checkbox";
+    elementCheckBox.type = "checkbox";
 
-    elementoCheckBox.addEventListener("click", function(){
+    elementCheckBox.addEventListener("click", function(){
         checked(this.parentNode, item)
     })
 
-    creatTd.appendChild(elementoCheckBox);
+    creatTd.appendChild(elementCheckBox);
 
     return creatTd
 }
@@ -127,7 +126,6 @@ function checked(tag, item) {
     const classParent = tag.parentNode.classList;
     const checked = classParent.contains("check");
     item.checked = !checked;
-    console.log(item);
     checked ? classParent.remove("check") : classParent.add("check");
     const products = getProducts().map((product) => {
         if (product.id === item.id) {
@@ -136,5 +134,4 @@ function checked(tag, item) {
         return product
     });
     setProducts(products)
-    console.log(classParent)
 }
